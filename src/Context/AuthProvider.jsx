@@ -7,29 +7,35 @@ import app from "../Firebase/Firebase.init";
 const AuthProvider = ({ children }) => {
 
     const [user,setUser]=useState(null);
+    const [loading,setLoading]=useState(true);
     const auth = getAuth(app);
 
     const createUser=(email,password)=>{
+        setLoading(true);
          return createUserWithEmailAndPassword(auth,email,password);
+         
     }
 
     const SignIn=(email,password)=>{
+        setLoading(true);
         return signInWithEmailAndPassword(auth,email,password);
     }
    
     const logOut=()=>{
+        setLoading(true);
       return  signOut(auth);
     }
 
   useEffect(()=>{
    const Unssubscribe= onAuthStateChanged(auth,currntUSer=>{
         setUser(currntUSer);
+        setLoading(false);
     });
  return ()=>{
     Unssubscribe();
  }
   } ,[])
-    const AuthInfo = {createUser,user,logOut,SignIn}
+    const AuthInfo = {createUser,user,logOut,SignIn,loading}
 
     return (
         <AuthContext.Provider value={AuthInfo}>
